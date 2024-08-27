@@ -53,23 +53,6 @@ Este arquivo configura a instância do Axios com a URL base da API ViaCEP. A fun
 4. **Acesse no navegador**:
    O projeto estará disponível em `http://localhost:5173` (ou outra porta indicada pelo Vite).
 
-## Vantagens de Usar o Vite
-
-- **Velocidade**: O Vite é significativamente mais rápido que outros bundlers como Webpack, especialmente em projetos React, devido ao seu server de desenvolvimento baseado em módulos ES.
-- **HMR (Hot Module Replacement)**: Atualizações instantâneas no navegador enquanto você desenvolve, sem precisar recarregar toda a página.
-
-## Personalização
-
-Este projeto pode ser facilmente expandido para incluir mais funcionalidades, como:
-
-- Validação avançada de CEPs.
-- Exibição de um mapa correspondente ao endereço.
-- Histórico de buscas realizadas.
-
-## Contribuições
-
-Sinta-se à vontade para contribuir com melhorias ou novas funcionalidades. Para isso, faça um fork deste repositório, crie uma branch com suas alterações e submeta um pull request.
-
 ---
 
 Este projeto é uma aplicação simples, mas funcional, de React com Vite e Axios para consumir APIs e manipular dados na interface do usuário.
