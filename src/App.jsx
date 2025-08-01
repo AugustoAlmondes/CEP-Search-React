@@ -1,63 +1,151 @@
-import { FiSearch } from "react-icons/fi";
-import { useState } from "react";
-import "./style.css";
+import { FiSearch, FiMapPin, FiNavigation, FiHome, FiAlertCircle } from "react-icons/fi";
+import { useState, useEffect } from "react";
 import "./App.css";
 import api from "./services/api";
 
 function App() {
   const [input, setInput] = useState("");
-  const [cep, setCep] = useState({});
+  const [cep, setCep] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [history, setHistory] = useState([]);
 
-  async function handleSSearch() {
+  // Carrega histórico do localStorage
+  useEffect(() => {
+    const savedHistory = localStorage.getItem("cepHistory");
+    if (savedHistory) {
+      setHistory(JSON.parse(savedHistory));
+    }
+  }, []);
+
+  // Salva histórico no localStorage
+  useEffect(() => {
+    if (history.length > 0) {
+      localStorage.setItem("cepHistory", JSON.stringify(history));
+    }
+  }, [history]);
+
+  async function handleSearch() {
     if (input === "") {
-      alert("Digite o CEP");
+      setError("Por favor, digite um CEP");
       return;
     }
 
+    // Verifica se CEP já está no histórico
+    const existingSearch = history.find(item => item.cep === input.replace(/\D/g, ''));
+    if (existingSearch) {
+      setCep(existingSearch);
+      setInput("");
+      return;
+    }
+
+    setLoading(true);
+    setError(null);
+
     try {
-      const response = await api.get(`${input}/json`);
+      const cleanedCEP = input.replace(/\D/g, '');
+      const response = await api.get(`${cleanedCEP}/json/`);
+      
+      if (response.data.erro) {
+        setError("CEP não encontrado");
+        return;
+      }
+
       setCep(response.data);
+      setHistory(prev => [response.data, ...prev.slice(0, 4)]);
       setInput("");
-    } catch {
-      setInput("");
-      alert("Ops erro ao buscar!");
+    } catch (err) {
+      setError("Erro ao buscar CEP. Verifique a conexão ou tente novamente.");
+      console.error("API Error:", err);
+    } finally {
+      setLoading(false);
     }
   }
 
-  return (
-    <>
-      <div className="container">
-        <h1 className="title">Buscador de CEP</h1>
+  function handleKeyPress(e) {
+    if (e.key === "Enter") {
+      handleSearch();
+    }
+  }
 
-        <div className="containerInput">
+  function formatCEP(cep) {
+    return cep.replace(/(\d{5})(\d{3})/, "$1-$2");
+  }
+
+  return (
+    <div className="app">
+      <div className="search-container">
+        <h1 className="title">
+          <FiMapPin className="icon" /> Buscador de CEP
+        </h1>
+        
+        <p className="subtitle">Encontre endereços em todo o Brasil</p>
+
+        <div className="search-box">
           <input
             type="text"
             value={input}
-            name="cepInput"
-            id="cepInput"
             onChange={(e) => setInput(e.target.value)}
-            placeholder="Digite seu CEP"
+            onKeyPress={handleKeyPress}
+            placeholder="Digite um CEP (apenas números)"
+            maxLength={9}
           />
-
-          <button className="buttonSearch" onClick={handleSSearch}>
-            <FiSearch size={25} color="white" />
+          <button 
+            className="search-button" 
+            onClick={handleSearch}
+            disabled={loading}
+          >
+            {loading ? (
+              <div className="spinner"></div>
+            ) : (
+              <FiSearch size={20} />
+            )}
           </button>
         </div>
 
-        {Object.keys(cep).length > 0 && (
-          <main className="main">
-            <h2>CEP: {cep.cep} </h2>
+        {error && (
+          <div className="error-message">
+            <FiAlertCircle /> {error}
+          </div>
+        )}
 
-            <span>{cep.logradouro} </span>
-            <span>Complemento: {cep.complemento} </span>
-            <span>{cep.bairro} </span>
-            <span>
-              {cep.localidade} - {cep.uf}{" "}
-            </span>
-          </main>
+        {cep && (
+          <div className="result-card">
+            <h2>
+              <FiNavigation /> {formatCEP(cep.cep)}
+            </h2>
+            <div className="address-info">
+              <p><strong>Logradouro:</strong> {cep.logradouro || "Não informado"}</p>
+              <p><strong>Bairro:</strong> {cep.bairro || "Não informado"}</p>
+              <p><strong>Cidade/UF:</strong> {cep.localidade} - {cep.uf}</p>
+              {cep.complemento && (
+                <p><strong>Complemento:</strong> {cep.complemento}</p>
+              )}
+            </div>
+          </div>
+        )}
+
+        {history.length > 0 && (
+          <div className="history-section">
+            <h3>Histórico de buscas</h3>
+            <div className="history-list">
+              {history.map((item, index) => (
+                <div 
+                  key={index} 
+                  className="history-item"
+                  onClick={() => {
+                    setInput(item.cep);
+                    setCep(item);
+                  }}
+                >
+                  <FiHome /> {formatCEP(item.cep)} - {item.localidade}
+                </div>
+              ))}
+            </div>
+          </div>
         )}
       </div>
-    </>
+    </div>
   );
 }
 

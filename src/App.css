@@ -1,0 +1,239 @@
+:root {
+    --primary: #5c88e7;
+    --primary-dark: #1f34af;
+    --secondary: #1f42a3;
+    --dark: #0f0e17;
+    --darker: #0a0a10;
+    --light: #fffffe;
+    --gray: #a7a9be;
+    --success: #00b894;
+    --error: #d63031;
+    --card-bg: #1a1a24;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.app {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: var(--darker);
+    padding: 2rem;
+    color: var(--light);
+}
+
+.search-container {
+    width: 100%;
+    max-width: 600px;
+    background: var(--dark);
+    border-radius: 16px;
+    padding: 2.5rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.title {
+    font-size: 2.2rem;
+    color: var(--primary);
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+}
+
+.title .icon {
+    color: var(--secondary);
+}
+
+.subtitle {
+    color: var(--gray);
+    margin-bottom: 2rem;
+    font-size: 1rem;
+    font-weight: 300;
+}
+
+.search-box {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.search-box input {
+    flex: 1;
+    padding: 1rem 1.5rem;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background: var(--card-bg);
+    color: var(--light);
+}
+
+.search-box input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.3);
+}
+
+.search-box input::placeholder {
+    color: var(--gray);
+    opacity: 0.7;
+}
+
+.search-button {
+    width: 50px;
+    height: 50px;
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.search-button:hover {
+    background: var(--primary-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(108, 92, 231, 0.4);
+}
+
+.search-button:disabled {
+    background: #3d3d4e;
+    cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
+}
+
+.spinner {
+    width: 20px;
+    height: 20px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: white;
+    animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.error-message {
+    color: var(--error);
+    background: rgba(214, 48, 49, 0.1);
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    border-left: 4px solid var(--error);
+}
+
+.result-card {
+    background: var(--card-bg);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.result-card h2 {
+    color: var(--primary);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.5rem;
+}
+
+.address-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.address-info p {
+    color: var(--light);
+    line-height: 1.6;
+}
+
+.address-info strong {
+    color: var(--secondary);
+    font-weight: 500;
+}
+
+.history-section {
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.history-section h3 {
+    color: var(--gray);
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 500;
+}
+
+.history-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.history-item {
+    padding: 0.75rem 1rem;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 8px;
+    color: var(--gray);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.95rem;
+}
+
+.history-item:hover {
+    background: rgba(108, 92, 231, 0.1);
+    color: var(--light);
+    transform: translateX(5px);
+}
+
+.history-item .icon {
+    color: var(--primary);
+    opacity: 0.7;
+}
+
+@media (max-width: 768px) {
+    .app {
+        padding: 1.5rem;
+    }
+
+    .search-container {
+        padding: 1.5rem;
+    }
+
+    .title {
+        font-size: 1.8rem;
+    }
+
+    .result-card h2 {
+        font-size: 1.3rem;
+    }
+}
